@@ -30,7 +30,7 @@ const handleSent = () => {
         setSent([...sent, messaggio])  
         setMessaggio('')  
     } else {
-        setError('Il messaggio non può essere vuoto')  // Mostra un errore se il messaggio è vuoto
+        setError('Il messaggio non può essere vuoto')  
     }
 }
 
@@ -47,7 +47,7 @@ useEffect(() => {
             setRicevuti((prevRicevuti) => [...prevRicevuti, scegliMessaggioCasuale()]);
             setScrivendo(null)
         }, 2000);
-        // Pulizia del timer quando il componente viene smontato o quando sent cambia
+        
         return () => clearTimeout(timer);
     }
 }, [sent]);
