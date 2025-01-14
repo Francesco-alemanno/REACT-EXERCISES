@@ -1,42 +1,61 @@
-import { useState } from "react";
-import { useWhatsapp } from "./useWhatsapp";
+import React, { useState } from "react";
+import useSWR from "swr";
 
-export function Whatsapp() {
-  const { error, messaggio, sent, ricevuti, scrivendo, handleChange, handleSent, handleKeyPress } = useWhatsapp();
+// Funzione fetcher per SWR
+const fetcher = (url) => fetch(url).then((res) => res.json());
+
+const ChatApp = () => {
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+
+  const handleSendMessage = async () => {
+    if (!input) return;
+
+    setMessages([...messages, { text: input, sender: "user" }]);
+
+    const { data, error } = useSWR(
+      "https://mocki.io/v1/793a02fb-8e48-4d67-a435-d9888cbaac94", // Endpoint mocki.io
+      fetcher
+    );
+
+    if (error) {
+      console.error("Errore nel recupero della risposta dal bot.");
+    }
+
+    if (data) {
+      
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: data.message, sender: "bot" },
+      ]);
+    }
+
+   
+    setInput("");
+  };
 
   return (
-    <div className="chat-container">
-      <div className="utente">
-        <h3>Carlo</h3>
-        {scrivendo && <p>{scrivendo}</p>}
-      </div>
-
-      <div className="messaggi">
-        {sent.map((msg, index) => (
-          <div key={index}>
-            <div className="messaggi-inviati">
-              <p className="inviati">{msg}</p>
+    <div>
+      <div className="chat-window">
+        <div className="messages">
+          {messages.map((msg, idx) => (
+            <div key={idx} className={msg.sender}>
+              <p>{msg.text}</p>
             </div>
-            {ricevuti[index] && (
-              <div className="messaggi-ricevuti">
-                <p className="ricevuti">{ricevuti[index]}</p>
-              </div>
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-
-      <input
-        type="text"
-        value={messaggio}
-        onChange={handleChange}
-        placeholder="Scrivi il messaggio"
-        onKeyDown={handleKeyPress}
-      />
-      <button onClick={handleSent}>✔️</button>
-
-      {/* Visualizzazione errori */}
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <div className="input-container">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Scrivi un messaggio"
+        />
+        <button onClick={handleSendMessage}>Invia</button>
+      </div>
     </div>
   );
-}
+};
+
+export default ChatApp;
