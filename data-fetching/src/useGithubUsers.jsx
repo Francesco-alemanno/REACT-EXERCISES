@@ -4,7 +4,7 @@ const fetcher=url=fetch(url).then((response)=>response.json)
 export function GitHubUsers({username}){
  
     const {data, error,mutate}=useSWR(`https://api.github.com/${username}`,fetcher)
-function fetchGithubUser{
+function fetchGithubUser(){
     mutate()
 }
 return{

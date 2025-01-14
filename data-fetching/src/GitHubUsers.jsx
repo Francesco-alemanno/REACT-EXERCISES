@@ -7,7 +7,7 @@ import { useGithubUsers } from "./useGithubUsers";
 
 export function GitHubUsers (){
 
-const {users,error,isLoading, , fetchGitubUser}=useGithubUsers(username)
+const {users,error,isLoading,  fetchGitubUser}=useGithubUsers(username)
 
 function handleGetUserData(){
  fetchGitubUser 
