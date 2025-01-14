@@ -1,29 +1,29 @@
 import { useState } from "react"
 import { GitHubUser } from "./GitHubUser";
+import useSWR from 'swr'
+import { useGithubUsers } from "./useGithubUsers";
+
+
 
 export function GitHubUsers (){
-const [username,setUsername]=useState('')
-const [search,setSearch]=useState('')
 
-const handleSubmit = (e) => {
-    e.preventDefault(); 
-    setSearch(username); 
-    setUsername(""); 
-  };
+const {users,error,isLoading, , fetchGitubUser}=useGithubUsers(username)
 
-    return(
-        <div>
-     
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)} 
-          placeholder="Cerca il profilo"
-        />
-{search && <GitHubUser username={search} />}       
-        <button type="submit">Search</button>
-      </form>
-      </div>
-    )
+function handleGetUserData(){
+ fetchGitubUser 
+}
+  
+  return <div>
+  <button onClick={fetchGitubUser}>Refresh</button>
+{isLoading&& <h3>Loading....</h3>}
+{error && <h3>An error has occured</h3>}
+{users && !error && <ul>
+  {users.map(user=>(
+    <li key={user.id}>{user.login}</li>
+  ))}
+  
+  </ul>}
+</div>
+
+
 }

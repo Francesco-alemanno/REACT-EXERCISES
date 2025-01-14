@@ -1,17 +1,22 @@
 
 import './App.css'
-
+import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import { GitHubUsers } from './GitHubUsers'
 
 function App() {
 
   return (
     <>
-  <div>
+  <BrowserRouter>
       <h1>GitHub User Search</h1>
       <GitHubUsers></GitHubUsers>
-      
-    </div>    </>
+      <Routes>
+        <Route path='/users' element={<GitHubUsers></GitHubUsers>}></Route>
+      </Routes>
+    </BrowserRouter>  
+    
+    
+      </>
   )
 }
 
